@@ -15,7 +15,6 @@ export default function MainMap({ polyline }: Props) {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
         <Polyline positions={polyline} />
-        {/* <Marker position={polyline[0]} */}
         {polyline.slice(1).map((l, idx) =>
           <Marker position={l} key={idx}>
             <Popup>{l.direction}</Popup>
