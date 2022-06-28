@@ -8,6 +8,8 @@
   "author": "",
   "license": "Unlicense",
   "dependencies": {
-    "express": "^4.18.1"
+    "basic-ftp": "^4.6.6",
+    "express": "^4.18.1",
+    "unzipper": "^0.10.11"
   }
 }
