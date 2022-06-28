@@ -8,9 +8,10 @@ export default function App() {
 
   useEffect(() => {
     (async () => {
-      let response = await fetch("/api/pog")
+      let response = await fetch("/api/optimize/5499")
       if (response.ok) {
-        setLine(await response.json())
+        let { altitude, azimuth, shape } = await response.json()
+        setLine(shape)
       }
     })()
   }, [])

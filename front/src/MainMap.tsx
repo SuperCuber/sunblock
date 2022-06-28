@@ -8,17 +8,20 @@ interface Props {
 
 export default function MainMap({ polyline }: Props) {
   return (
-    <MapContainer center={[51.505, -0.09]} zoom={13} scrollWheelZoom={true} id="map">
-      <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-      />
-      <Marker position={[51.505, -0.09]}>
-        <Popup>
-          A pretty CSS3 popup. <br /> Easily customizable.
-        </Popup>
-      </Marker>
-      <Polyline positions={polyline} />
+    <MapContainer center={[31.8, 35.25]} zoom={13} scrollWheelZoom={true} id="map">
+      <>
+        <TileLayer
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        />
+        <Polyline positions={polyline} />
+        {/* <Marker position={polyline[0]} */}
+        {polyline.slice(1).map((l, idx) =>
+          <Marker position={l} key={idx}>
+            <Popup>{l.direction}</Popup>
+          </Marker>
+        )}
+      </>
     </MapContainer>
   )
 }
