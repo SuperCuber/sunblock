@@ -6,7 +6,7 @@ export async function getRoutes(req, res) {
     data = data.map(route => {
         var [from, to] = route.route_long_name.split("<->")
         to = to.replace(/-.+$/, "")
-        return {  ...route, route_long_name: {from, to} }
+        return { ...route, route_long_name: { from, to } }
     })
     res.json(data)
 }
@@ -48,8 +48,27 @@ export async function optimizeRoute(req, res) {
             // In case of south, convert clockwise angle to anticlockwise "big" angle
             direction_theta = 2 * Math.PI - direction_theta
         }
-        shape[i].direction = direction_theta
+
+        let angle_with_sun = direction_theta - azimuth
+        if (angle_with_sun > 2 * Math.PI) {
+            angle_with_sun -= 2 * Math.PI
+        }
+
+        shape[i].sunOnLeft = angle_with_sun > Math.PI
     }
 
-    res.json({ altitude, azimuth, shape })
+    let parts = {left: [], right: []}
+    let currentLeft = shape[1].sunOnLeft
+    let currentPart = [shape[0]]
+    for (var i = 1; i < shape.length; i++) {
+        if (shape[i].sunOnLeft == currentLeft) {
+            currentPart.push({lat: shape[i].lat, lng: shape[i].lng})
+        } else {
+            parts[currentLeft ? "left" : "right"].push(currentPart)
+            currentPart = [currentPart[currentPart.length - 1]]
+            currentLeft = shape[i].sunOnLeft
+        }
+    }
+
+    res.json({ altitude, azimuth, parts })
 }
