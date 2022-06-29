@@ -1,0 +1,42 @@
+.sidebar {
+    flex-basis: 25vw;
+    overflow-y: scroll;
+
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    direction: rtl;
+
+    &--search {}
+
+    &--suggestion {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+
+        padding: 8px;
+        gap: 8px;
+        border-block: 1px solid grey;
+
+        cursor: pointer;
+        user-select: none;
+
+
+        &--number {
+            font-size: 1.5em;
+
+            /* center */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        &:hover {
+            background-color: #0001;
+        }
+
+        &:active {
+            background-color: #0002;
+        }
+    }
+}

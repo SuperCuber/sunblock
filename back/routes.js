@@ -3,6 +3,11 @@ import { DB } from "./transportation.js"
 
 export async function getRoutes(req, res) {
     let data = DB.prepare("SELECT * FROM routes").all()
+    data = data.map(route => {
+        var [from, to] = route.route_long_name.split("<->")
+        to = to.replace(/-.+$/, "")
+        return {  ...route, route_long_name: {from, to} }
+    })
     res.json(data)
 }
 
@@ -25,7 +30,7 @@ export async function optimizeRoute(req, res) {
     // azimuth is from south clockwise:
     // azimuth=0 means south, azimuth=PI/2 means west
     let { altitude, azimuth } = SunCalc.getPosition(new Date(), lat, lng)
-    // Translate to regular theta
+    // Translate to regular theta (from east anti clockwise)
     azimuth = -Math.PI / 2 - azimuth
 
     for (var i = 1; i < shape.length; i++) {
@@ -33,18 +38,17 @@ export async function optimizeRoute(req, res) {
         let b = shape[i]
         let direction_vec = [b.lng - a.lng, b.lat - a.lat]
         // Angle between direction_vec and east
-        let direction_theta_rad = Math.acos(
+        let direction_theta = Math.acos(
             direction_vec[0]
             / Math.sqrt(direction_vec[0] * direction_vec[0]
                 + direction_vec[1] * direction_vec[1]
             )
         )
         if (direction_vec[1] < 0) {
-            // ??? this fixes it?
-            direction_theta_rad *= -1
+            // In case of south, convert clockwise angle to anticlockwise "big" angle
+            direction_theta = 2 * Math.PI - direction_theta
         }
-        let direction_theta_deg = direction_theta_rad * 180 / Math.PI
-        shape[i].direction = direction_theta_deg
+        shape[i].direction = direction_theta
     }
 
     res.json({ altitude, azimuth, shape })
