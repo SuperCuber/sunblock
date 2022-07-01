@@ -17,7 +17,7 @@ npm i
 popd
 
 sudo systemctl daemon-reload
-sudo systemctl stop sunblock
-sudo systemctl start sunblock
-sudo systemctl status sunblock
+sudo systemctl stop sunblock-back
+sudo systemctl start sunblock-back
+sudo systemctl status sunblock-back
 EOF
