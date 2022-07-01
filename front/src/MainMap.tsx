@@ -43,8 +43,7 @@ export default function MainMap({ polyline, sunPosition, currentRoute }: Props) 
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
 
-        {/* <div key={currentRoute}> */}
-        {polyline.map(line => {
+        {polyline.map((line, idx) => {
           // Imagine cartesian coordinates, your bus is facing east.
           // Then the color used for the direction of the sun is purple at east and west, red in south (right), blue in north (left).
           // That's achieved with a sine function - the y coordinate.
@@ -54,19 +53,9 @@ export default function MainMap({ polyline, sunPosition, currentRoute }: Props) 
           const END = 360
           const hue = START + (END - START) * colorProgress
 
-          const key = `${currentRoute},${line.p[0].lat},${line.p[0].lng}`
-          return (
-            <>
-              <Polyline key={key} positions={line.p} color={`hsl(${hue}, ${Math.abs(colorDirection) * 100}%, 50%)`} />
-
-              {/* <Marker position={line.p[0]} key={idx}> */}
-              {/*   <Popup>{line.angle * 180 / Math.PI} : {hue}</Popup> */}
-              {/* </Marker> */}
-            </>
-          )
-        }
-        )}
-        {/* </div> */}
+          const key = `${currentRoute},${idx}`
+          return <Polyline key={key} positions={line.p} color={`hsl(${hue}, ${Math.abs(colorDirection) * 100}%, 50%)`} />
+        })}
 
         <Polyline positions={[sunLocation, center]} color="red" />
         {/* <Marker position={sunLocation}> */}

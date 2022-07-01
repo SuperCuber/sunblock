@@ -1,29 +1,14 @@
-import { LatLngLiteral } from 'leaflet'
 import MainMap from './MainMap'
 import './App.scss'
 import { useEffect, useState } from 'react'
-import Sidebar from './Sidebar'
-
-interface OptimizedRoute {
-  altitude: number,
-  azimuth: number,
-  parts: { p: LatLngLiteral[], angle: number }[]
-}
+import SearchRoute from './SearchRoute'
+import { OptimizedRoute, RoutePart, SunPosition } from './types'
 
 export default function App() {
   const [currentRoute, setCurrentRoute] = useState<number>()
-  const [line, setLine] = useState<({ p: LatLngLiteral[], angle: number })[]>()
-  const [sunPosition, setSunPosition] = useState<{ altitude: number, azimuth: number }>()
-  const [routes, setRoutes] = useState<any[]>([])
-
-  useEffect(() => {
-    (async () => {
-      let response = await fetch("/api/routes")
-      if (response.ok) {
-        setRoutes(await response.json())
-      }
-    })()
-  }, [])
+  const [line, setLine] = useState<RoutePart[]>()
+  const [sunPosition, setSunPosition] = useState<SunPosition>()
+  const [searching, setSearching] = useState(true)
 
   useEffect(() => {
     if (currentRoute === undefined) return;
@@ -37,10 +22,21 @@ export default function App() {
     })()
   }, [currentRoute])
 
+  function setRoute(route: any) {
+    setCurrentRoute(route)
+    setSearching(false)
+  }
+
   return (
     <div className="app">
-      <Sidebar routes={routes} setRoute={setCurrentRoute} />
-      <MainMap polyline={line} sunPosition={sunPosition} currentRoute={currentRoute} />
+      <div className="app-bar">
+        Sunblock
+      </div>
+      {
+        searching
+          ? <SearchRoute setRoute={setRoute} />
+          : <MainMap polyline={line} sunPosition={sunPosition} currentRoute={currentRoute} />
+      }
     </div>
   )
 }

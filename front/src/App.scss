@@ -1,5 +1,22 @@
+$appbar-height: 50px;
+
 .app {
-    height: 100%;
+    height: calc(100% - $appbar-height);
+}
+
+html {
+    scrollbar-width: none;
+}
+
+.app-bar {
+    height: $appbar-height;
+    padding-inline: 8px;
+    border-bottom: 1px solid black;
+
+    font-size: 2em;
     display: flex;
-    flex-diretion: column;
+    align-items: center;
+
+    color: #fff;
+    background-color: #444;
 }

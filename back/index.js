@@ -8,7 +8,7 @@ async function main() {
     const app = express()
     app.use(express.json({limit: "50mb"}))
 
-    app.get("/routes", getRoutes)
+    app.get("/routes/:search?", getRoutes)
     app.get("/optimize/:route", optimizeRoute)
 
     app.listen(3001)

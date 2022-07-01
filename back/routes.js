@@ -2,7 +2,12 @@ import SunCalc from "suncalc"
 import { DB } from "./transportation.js"
 
 export async function getRoutes(req, res) {
-    let data = DB.prepare("SELECT * FROM routes").all()
+    let search = req.params.search
+    let data = DB.prepare(`
+        SELECT *
+        FROM routes
+        WHERE routes.route_short_name == ?
+    `).all(search)
     data = data.map(route => {
         var [from, to] = route.route_long_name.split("<->")
         to = to.replace(/-.+$/, "")
