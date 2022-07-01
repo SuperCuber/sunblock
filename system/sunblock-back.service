@@ -1,0 +1,12 @@
+[Unit]
+Description=Sunblock backend
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/ubuntu/sunblock/back
+ExecStart=/usr/bin/node /home/ubuntu/sunblock/back/index.js
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

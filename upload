@@ -1,0 +1,23 @@
+#!/bin/bash
+
+set -e -x
+
+vps_name=${1:-oracle_vps}
+
+ssh $vps_name <<EOF
+cd sunblock && git pull
+
+pushd front
+npm i
+npm run build
+popd
+
+pushd back
+npm i
+popd
+
+sudo systemctl daemon-reload
+sudo systemctl stop sunblock
+sudo systemctl start sunblock
+sudo systemctl status sunblock
+EOF
