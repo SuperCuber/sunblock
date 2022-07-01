@@ -22,7 +22,7 @@ export default function App() {
     })()
   }, [currentRoute])
 
-  function setRoute(route: any) {
+  function setRoute(route: number) {
     setCurrentRoute(route)
     setSearching(false)
   }

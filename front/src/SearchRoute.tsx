@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import "./SearchRoute.scss"
+import { Route } from "./types"
 
 interface Props {
   setRoute: (route_id: number) => void,
@@ -7,7 +8,7 @@ interface Props {
 
 export default function SearchRoute({ setRoute }: Props) {
   const [search, setSearch] = useState<string>("")
-  const [suggestions, setSuggestions] = useState<any[]>([])
+  const [suggestions, setSuggestions] = useState<Route[]>([])
 
   useEffect(() => {
     (async () => {
