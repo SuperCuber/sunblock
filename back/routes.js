@@ -33,6 +33,7 @@ export async function optimizeRoute(req, res) {
     // Translate to regular theta (from east anti clockwise)
     azimuth = -Math.PI / 2 - azimuth
 
+    let parts = []
     for (var i = 1; i < shape.length; i++) {
         let a = shape[i - 1]
         let b = shape[i]
@@ -54,20 +55,7 @@ export async function optimizeRoute(req, res) {
             angle_with_sun -= 2 * Math.PI
         }
 
-        shape[i].sunOnLeft = angle_with_sun > Math.PI
-    }
-
-    let parts = {left: [], right: []}
-    let currentLeft = shape[1].sunOnLeft
-    let currentPart = [shape[0]]
-    for (var i = 1; i < shape.length; i++) {
-        if (shape[i].sunOnLeft == currentLeft) {
-            currentPart.push({lat: shape[i].lat, lng: shape[i].lng})
-        } else {
-            parts[currentLeft ? "left" : "right"].push(currentPart)
-            currentPart = [currentPart[currentPart.length - 1]]
-            currentLeft = shape[i].sunOnLeft
-        }
+        parts.push({ p: [a, b], angle: angle_with_sun })
     }
 
     res.json({ altitude, azimuth, parts })

@@ -1,15 +1,16 @@
-import { LatLngExpression, LatLngLiteral, Map } from 'leaflet'
+import { LatLngLiteral, Map } from 'leaflet'
 import React, { useEffect } from 'react'
-import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet'
+import { MapContainer, TileLayer, Polyline } from 'react-leaflet'
 import './MainMap.css'
 
 interface Props {
-  polyline?: {sunOnLeft: boolean, p: LatLngExpression[]}[],
+  polyline?: ({ p: LatLngLiteral[], angle: number })[],
   sunPosition?: { altitude: number, azimuth: number },
+  currentRoute?: number,
 }
 
-export default function MainMap({ polyline, sunPosition }: Props) {
-  if (!polyline || !sunPosition) {
+export default function MainMap({ polyline, sunPosition, currentRoute }: Props) {
+  if (!polyline || !sunPosition || !currentRoute) {
     return (
       <MapContainer center={[0, 0]} zoom={1} scrollWheelZoom={true} id="map">
         <>
@@ -41,17 +42,33 @@ export default function MainMap({ polyline, sunPosition }: Props) {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        {polyline.map((line, idx) =>
-          <Polyline key={idx} positions={line.p} color={line.sunOnLeft ? "blue" : "red"} />
+
+        {/* <div key={currentRoute}> */}
+        {polyline.map(line => {
+          // Imagine cartesian coordinates, your bus is facing east.
+          // Then the color used for the direction of the sun is purple at east and west, red in south (right), blue in north (left).
+          // That's achieved with a sine function - the y coordinate.
+          const colorDirection = Math.sin(line.angle)
+          const colorProgress = (colorDirection + 1) / 2
+          const START = 240
+          const END = 360
+          const hue = START + (END - START) * colorProgress
+
+          const key = `${currentRoute},${line.p[0].lat},${line.p[0].lng}`
+          return (
+            <>
+              <Polyline key={key} positions={line.p} color={`hsl(${hue}, ${Math.abs(colorDirection) * 100}%, 50%)`} />
+
+              {/* <Marker position={line.p[0]} key={idx}> */}
+              {/*   <Popup>{line.angle * 180 / Math.PI} : {hue}</Popup> */}
+              {/* </Marker> */}
+            </>
+          )
+        }
         )}
+        {/* </div> */}
+
         <Polyline positions={[sunLocation, center]} color="red" />
-
-        {/* {polyline.slice(1).map((l, idx) => */}
-        {/*   <Marker position={l} key={idx}> */}
-        {/*   <Popup>{(l as any).sunOnLeft ? "left" : "right" }</Popup> */}
-        {/*   </Marker> */}
-        {/* )} */}
-
         {/* <Marker position={sunLocation}> */}
         {/*   <Popup>{(sunPosition.altitude * 180 / Math.PI).toFixed(2)} deg</Popup> */}
         {/* </Marker> */}
