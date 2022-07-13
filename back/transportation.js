@@ -8,7 +8,7 @@ import Papa from "papaparse"
 const TRANSPORTATION_ZIP = "israel-public-transportation.zip"
 export const TRANSPORTATION_FOLDER = "transportation"
 const TRANSPORTATION_LOCAL_ZIP = `${TRANSPORTATION_FOLDER}/${TRANSPORTATION_ZIP}`
-const REQUIRED_FILES = ["trips.txt", "routes.txt", "shapes.txt"]
+const REQUIRED_FILES = ["trips.txt", "routes.txt", "shapes.txt", "agency.txt"]
 const DB_FILE = `${TRANSPORTATION_FOLDER}/transportation.sqlite3`
 
 export var DB = undefined;
@@ -51,6 +51,24 @@ export async function downloadIfNeeded() {
 async function createDb() {
     const db = new Database(DB_FILE)
     db.pragma('journal_mode = WAL')
+
+    db.prepare(
+        `create table agency(
+            agency_id integer not null,
+            agency_name text not null,
+            agency_url text not null,
+            agency_timezone text not null,
+            agency_lang text not null,
+            agency_phone text not null,
+            agency_fare_url text not null
+        );
+    `).run()
+    await insertTable(
+        db,
+        "agency",
+        ["agency_id", "agency_name", "agency_url", "agency_timezone", "agency_lang", "agency_phone", "agency_fare_url"]
+    )
+
     db.prepare(
         `create table routes(
             route_id integer not null,
@@ -62,6 +80,11 @@ async function createDb() {
             route_color text not null
         );
     `).run()
+    await insertTable(
+        db,
+        "routes",
+        ["route_id", "agency_id", "route_short_name", "route_long_name", "route_desc", "route_type", "route_color"],
+    )
 
     db.prepare(
         `create table trips(
@@ -73,6 +96,11 @@ async function createDb() {
             shape_id integer not null
         );
     `).run()
+    await insertTable(
+        db,
+        "trips",
+        ["route_id", "service_id", "trip_id", "trip_headsign", "direction_id", "shape_id"],
+    )
 
     db.prepare(
         `create table shapes(
@@ -82,19 +110,6 @@ async function createDb() {
             shape_pt_sequence integer not null
         );
     `).run()
-
-    await insertTable(
-        db,
-        "routes",
-        ["route_id", "agency_id", "route_short_name", "route_long_name", "route_desc", "route_type", "route_color"],
-    )
-
-    await insertTable(
-        db,
-        "trips",
-        ["route_id", "service_id", "trip_id", "trip_headsign", "direction_id", "shape_id"],
-    )
-
     await insertTable(
         db,
         "shapes",

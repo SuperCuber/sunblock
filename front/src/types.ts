@@ -18,7 +18,7 @@ export interface SunPosition {
 
 export interface Route {
   route_id: number,
-  agency: string,
+  agency_name: string,
   route_short_name: string,
   route_long_name: {
     from: string,

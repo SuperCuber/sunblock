@@ -4,8 +4,9 @@ import { DB } from "./transportation.js"
 export async function getRoutes(req, res) {
     let search = req.params.search
     let data = DB.prepare(`
-        SELECT *
+        SELECT routes.*, agency.agency_name
         FROM routes
+        LEFT JOIN agency ON agency.agency_id == routes.agency_id
         WHERE routes.route_short_name == ?
     `).all(search)
     data = data.map(route => {
