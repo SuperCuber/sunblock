@@ -17,7 +17,11 @@ export async function getRoutes(req, res) {
 }
 
 export async function optimizeRoute(req, res) {
-    let route_id = req.params.route
+    let route_id = parseInt(req.params.route)
+    if (isNaN(route_id)) {
+        res.status(400).end()
+        return
+    }
     let shape_id = DB.prepare(`
         SELECT trips.*
         FROM trips

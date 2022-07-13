@@ -18,6 +18,8 @@ export default function Plan() {
         let shape: LatLngLiteral[] = await response.json()
         let route = optimizeRoute(shape, new Date(), shape[0])
         setOptimizedRoute(route)
+      } else {
+        console.error("Received error from server")
       }
     })()
   }, [searchParams])
