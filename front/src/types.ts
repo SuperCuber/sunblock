@@ -1,11 +1,5 @@
 import { LatLngLiteral } from "leaflet"
 
-export interface OptimizedRoute {
-  altitude: number,
-  azimuth: number,
-  parts: RoutePart[],
-}
-
 export interface RoutePart {
   p: LatLngLiteral[],
   angle: number,

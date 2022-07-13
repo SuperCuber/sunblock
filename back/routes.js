@@ -1,4 +1,3 @@
-import SunCalc from "suncalc"
 import { DB } from "./transportation.js"
 
 export async function getRoutes(req, res) {
@@ -31,38 +30,5 @@ export async function optimizeRoute(req, res) {
         ORDER BY shape_pt_sequence ASC
     `).all(shape_id)
 
-    let { lat, lng } = shape[0]
-
-    // azimuth is from south clockwise:
-    // azimuth=0 means south, azimuth=PI/2 means west
-    let { altitude, azimuth } = SunCalc.getPosition(new Date(), lat, lng)
-    // Translate to regular theta (from east anti clockwise)
-    azimuth = -Math.PI / 2 - azimuth
-
-    let parts = []
-    for (var i = 1; i < shape.length; i++) {
-        let a = shape[i - 1]
-        let b = shape[i]
-        let direction_vec = [b.lng - a.lng, b.lat - a.lat]
-        // Angle between direction_vec and east
-        let direction_theta = Math.acos(
-            direction_vec[0]
-            / Math.sqrt(direction_vec[0] * direction_vec[0]
-                + direction_vec[1] * direction_vec[1]
-            )
-        )
-        if (direction_vec[1] < 0) {
-            // In case of south, convert clockwise angle to anticlockwise "big" angle
-            direction_theta = 2 * Math.PI - direction_theta
-        }
-
-        let angle_with_sun = direction_theta - azimuth
-        if (angle_with_sun > 2 * Math.PI) {
-            angle_with_sun -= 2 * Math.PI
-        }
-
-        parts.push({ p: [a, b], angle: angle_with_sun })
-    }
-
-    res.json({ altitude, azimuth, parts })
+    res.json(shape)
 }
