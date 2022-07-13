@@ -1,0 +1,46 @@
+.main-map {
+  height: 100%;
+  width: 100%;
+  position: relative;
+
+  &__map {
+    height: 100%;
+    width: 100%;
+    z-index: 0;
+  }
+
+  &__overlay {
+    /* SVG preserves aspect ratio so this will center it
+      but stretch maximally in one of the directions */
+    height: 100%;
+    width: 100%;
+
+    position: absolute;
+    top: 0;
+    z-index: 1;
+
+    pointer-events: none;
+
+    $sun-color: rgb(254, 154, 46);
+
+    &__sun {
+      fill: $sun-color;
+    }
+
+    &__sun-line {
+      stroke: $sun-color;
+      stroke-width: 3px;
+    }
+
+    &__sun-shadow {
+      fill: rgba(0, 0, 0, 0.5);
+      stroke-width: 3px;
+    }
+
+    &__sun-line-shadow {
+      stroke: rgba(0, 0, 0, 0.5);
+      stroke-width: 3px;
+    }
+
+  }
+}

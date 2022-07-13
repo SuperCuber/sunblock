@@ -1,8 +1,8 @@
 import { LatLngLiteral, Map } from 'leaflet'
-import React, { useEffect } from 'react'
+import { useEffect, createRef } from 'react'
 import { MapContainer, TileLayer, Polyline } from 'react-leaflet'
 import { RoutePart } from '../types'
-import './MainMap.css'
+import './MainMap.scss'
 
 interface Props {
   polyline: RoutePart[],
@@ -25,33 +25,43 @@ function angleColor(angle: number): string {
 
 export default function MainMap({ polyline, sunPosition, currentRoute }: Props) {
   let center = polyline[Math.floor(polyline.length / 2)].p[0]
-  let sunDistance = Math.cos(sunPosition.altitude) / 40
-  let sunLocation: LatLngLiteral = {
-    lng: center.lng + Math.cos(sunPosition.azimuth) * sunDistance,
-    lat: center.lat + Math.sin(sunPosition.azimuth) * sunDistance,
-  }
 
-  let map = React.createRef<Map>()
+  let sunDistance = Math.cos(sunPosition.altitude) * 95
+  let sunHeight = Math.sin(sunPosition.altitude) * 30
+  let sunOffset = [Math.cos(sunPosition.azimuth) * sunDistance, Math.sin(sunPosition.azimuth) * sunDistance]
+
+  let map = createRef<Map>()
   useEffect(() => {
     map.current?.setView(center, 13)
   }, [polyline])
 
-  return (<MapContainer scrollWheelZoom={true} id="map" ref={map} center={center} zoom={13}>
-    <>
-      <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-      />
+  return (
+    <div className="main-map">
+      <MapContainer scrollWheelZoom={true} className="main-map__map" ref={map} center={center} zoom={13}>
+        <>
+          <TileLayer
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          />
 
-      {polyline.map((line, idx) =>
-        <Polyline key={`${currentRoute},${idx}`} positions={line.p} color={angleColor(line.angle)} />
-      )}
+          {polyline.map((line, idx) =>
+            <Polyline key={`${currentRoute},${idx}`} positions={line.p} color={angleColor(line.angle)} />
+          )}
+        </>
+      </MapContainer>
+      <svg className="main-map__overlay" viewBox='-100 -100 200 200'>
+        <line className="main-map__overlay__sun-line-shadow" x1="0" y1="0" x2={sunOffset[0]} y2={sunOffset[1] + sunHeight} filter="url(#blur-shadow)" />
+        <circle className="main-map__overlay__sun-shadow" cx={sunOffset[0]} cy={sunOffset[1] + sunHeight} r="10" filter="url(#blur-shadow)" />
 
-      <Polyline positions={[sunLocation, center]} color="red" />
-      {/* <Marker position={sunLocation}> */}
-      {/*   <Popup>{(sunPosition.altitude * 180 / Math.PI).toFixed(2)} deg</Popup> */}
-      {/* </Marker> */}
-    </>
-  </MapContainer>
+        <circle className="main-map__overlay__sun" cx={sunOffset[0]} cy={sunOffset[1]} r="10" />
+        <line className="main-map__overlay__sun-line" x1="0" y1="0" x2={sunOffset[0]} y2={sunOffset[1]} />
+
+        <defs>
+          <filter id="blur-shadow" x="0" y="0">
+            <feGaussianBlur in="SourceGraphic" stdDeviation={3} />
+          </filter>
+        </defs>
+      </svg>
+    </div>
   )
 }

@@ -1,6 +1,7 @@
+$appbar-height: 50px;
 
 .app {
-    height: calc(100%);
+    height: calc(100% - $appbar-height);
 }
 
 html {
@@ -8,7 +9,7 @@ html {
 }
 
 .app-bar {
-    height: 50px;
+    height: $appbar-height;
     padding-inline: 8px;
     border-bottom: 1px solid black;
 
