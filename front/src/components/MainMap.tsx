@@ -10,7 +10,7 @@ interface Props {
 }
 
 export default function MainMap({ polyline, sunPosition, currentRoute }: Props) {
-  let center = polyline[Math.floor(polyline.length / 2)].p[0] as LatLngLiteral
+  let center = polyline[Math.floor(polyline.length / 2)].p[0]
   let sunDistance = Math.cos(sunPosition.altitude) / 40
   let sunLocation: LatLngLiteral = {
     lng: center.lng + Math.cos(sunPosition.azimuth) * sunDistance,

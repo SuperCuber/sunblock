@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import MainMap from "../MainMap";
+import MainMap from "../components/MainMap";
 import { OptimizedRoute, RoutePart, SunPosition } from "../types";
 
 export default function Plan() {
