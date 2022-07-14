@@ -1,4 +1,4 @@
-import { LatLngLiteral, Map } from 'leaflet'
+import { Map } from 'leaflet'
 import { useEffect, createRef } from 'react'
 import { MapContainer, TileLayer, Polyline } from 'react-leaflet'
 import { RoutePart } from '../types'
@@ -28,7 +28,8 @@ export default function MainMap({ polyline, sunPosition, currentRoute }: Props) 
 
   let sunDistance = Math.cos(sunPosition.altitude) * 95
   let sunHeight = Math.sin(sunPosition.altitude) * 30
-  let sunOffset = [Math.cos(sunPosition.azimuth) * sunDistance, Math.sin(sunPosition.azimuth) * sunDistance]
+  // y is negated because svg y axis points down
+  let sunOffset = [Math.cos(sunPosition.azimuth) * sunDistance, -Math.sin(sunPosition.azimuth) * sunDistance]
 
   let map = createRef<Map>()
   useEffect(() => {
