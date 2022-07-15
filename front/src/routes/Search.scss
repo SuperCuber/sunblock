@@ -1,13 +1,13 @@
-.search_route {
+.search-route {
     padding-top: 8px;
     display: flex;
     flex-direction: column;
     align-items: stretch;
     direction: rtl;
 
-    &--search {}
+    &__search {}
 
-    &--suggestion {
+    &__suggestion {
         display: flex;
         flex-direction: row;
         align-items: center;
@@ -19,12 +19,12 @@
         cursor: pointer;
         user-select: none;
 
-        &--agency {
+        &__agency {
             // until i get icons
             order: 1;
         }
 
-        &--number {
+        &__number {
             font-size: 1.5em;
 
             /* center */

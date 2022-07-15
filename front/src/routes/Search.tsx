@@ -18,13 +18,13 @@ export default function Search() {
   }, [search])
 
   return (
-    <div className="search_route">
-      <input className="search_route--search" type="text" value={search} onChange={e => setSearch(e.target.value)} />
+    <div className="search-route">
+      <input className="search-route__search" type="text" value={search} onChange={e => setSearch(e.target.value)} />
       {suggestions.map(s =>
-        <div className="search_route--suggestion" key={s.route_id} onClick={() => navigate(`/plan?route=${s.route_id}`)}>
-          <div className="search_route--suggestion--agency">{s.agency_name}</div>
-          <div className="search_route--suggestion--number">{s.route_short_name}</div>
-          <div className="search_route--suggestion--description">{s.route_long_name.to}</div>
+        <div className="search-route__suggestion" key={s.route_id} onClick={() => navigate(`/plan?route=${s.route_id}`)}>
+          <div className="search-route__suggestion__agency">{s.agency_name}</div>
+          <div className="search-route__suggestion__number">{s.route_short_name}</div>
+          <div className="search-route__suggestion__description">{s.route_long_name.to}</div>
           <div style={{ flexGrow: 1 }} />
         </div>
       )}
