@@ -7,7 +7,7 @@ import './MainMap.scss'
 interface Props {
   polyline: RoutePart[],
   sunPosition: { altitude: number, azimuth: number },
-  currentRoute: number,
+  routeKey: string,
 }
 
 function angleColor(angle: number): string {
@@ -23,7 +23,7 @@ function angleColor(angle: number): string {
   return `hsl(${hue}, ${Math.abs(colorDirection) * 100}%, 50%)`
 }
 
-export default function MainMap({ polyline, sunPosition, currentRoute }: Props) {
+export default function MainMap({ polyline, sunPosition, routeKey }: Props) {
   let center = polyline[Math.floor(polyline.length / 2)].p[0]
 
   let sunDistance = Math.cos(sunPosition.altitude) * 95
@@ -46,7 +46,7 @@ export default function MainMap({ polyline, sunPosition, currentRoute }: Props) 
           />
 
           {polyline.map((line, idx) =>
-            <Polyline key={`${currentRoute},${idx}`} positions={line.p} color={angleColor(line.angle)} />
+            <Polyline key={`${routeKey},${idx}`} positions={line.p} color={angleColor(line.angle)} />
           )}
         </>
       </MapContainer>

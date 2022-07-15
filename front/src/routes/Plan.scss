@@ -1,0 +1,28 @@
+.plan {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+
+    &__map {
+        flex-grow: 1;
+    }
+
+    &__hour-slider {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+
+        margin: 1em;
+
+        &__slider {
+        }
+
+        &__ticks {
+            display: flex;
+            justify-content: space-between;
+
+            &__tick {
+            }
+        }
+    }
+}
