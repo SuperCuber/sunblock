@@ -42,9 +42,6 @@ export default function Plan() {
           className="plan__hour-slider__slider" type="range" min="0" max="23"
           value={hour} onInput={e => setHour(parseInt((e.target as HTMLInputElement).value))}
         />
-        <div className="plan__hour-slider__ticks">
-          {Array(24).fill(0).map(_ => <span className="plan__hour-slider__ticks__tick">|</span>)}
-        </div>
       </div>
     </div>
   )

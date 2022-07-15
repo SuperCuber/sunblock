@@ -12,17 +12,6 @@
         flex-direction: column;
         align-items: stretch;
 
-        margin: 1em;
-
-        &__slider {
-        }
-
-        &__ticks {
-            display: flex;
-            justify-content: space-between;
-
-            &__tick {
-            }
-        }
+        margin: 0.6em;
     }
 }
